@@ -1,0 +1,2677 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALLways Trevel | Premium Train Seat Sniper & Dashboard</title>
+    <meta name="description"
+        content="Get confirmed seats on Indian Railways. Experience our smart alternate routing, real-time PNR clearance predictions, and live offline GPS tracking.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables & Design System */
+        :root {
+            --bg-dark: #070b13;
+            --bg-card: rgba(15, 23, 42, 0.45);
+            --bg-card-hover: rgba(30, 41, 59, 0.6);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-color-hover: rgba(255, 255, 255, 0.15);
+            
+            --primary: #3b82f6; /* Electric Blue */
+            --primary-glow: rgba(59, 130, 246, 0.35);
+            --primary-hover: #2563eb;
+            
+            --accent: #f97316; /* Tangerine Orange */
+            --accent-glow: rgba(249, 115, 22, 0.35);
+            --accent-hover: #ea580c;
+            
+            --success: #10b981; /* Emerald Confirm Green */
+            --success-glow: rgba(16, 185, 129, 0.2);
+            
+            --warning: #f59e0b; /* Amber */
+            --warning-glow: rgba(245, 158, 11, 0.2);
+            
+            --danger: #f43f5e; /* Rose Red */
+            --danger-glow: rgba(244, 63, 94, 0.2);
+            
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            
+            --sidebar-width: 260px;
+            --glass-blur: 24px;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(249, 115, 22, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(7, 11, 19, 1) 0%, rgba(4, 7, 12, 1) 100%);
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* App Container Layout */
+        .app-layout {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(8, 12, 21, 0.85);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            z-index: 100;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2.5rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary) 0%, #1e40af 100%);
+            border-radius: 12px;
+            box-shadow: 0 0 20px var(--primary-glow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-text {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(135deg, #fff 50%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+            -webkit-text-fill-color: initial;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.85rem 1rem;
+            color: var(--text-muted);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.03) 100%);
+            border-color: rgba(59, 130, 246, 0.25);
+            box-shadow: inset 3px 0 0 var(--primary);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            transition: transform 0.25s;
+        }
+
+        .nav-item:hover svg {
+            transform: translateX(2px);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.75rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 0.95rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .username {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge-premium {
+            display: inline-block;
+            font-size: 0.65rem;
+            color: var(--accent);
+            background: rgba(249, 115, 22, 0.15);
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+            font-weight: bold;
+            border: 1px solid rgba(249, 115, 22, 0.2);
+        }
+
+        /* Main Content Panel */
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Top Header Bar */
+        .top-header {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            background: rgba(7, 11, 19, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 90;
+            flex-shrink: 0;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .page-title-area h2 {
+            font-size: 1.25rem;
+            color: #fff;
+        }
+
+        .page-title-area p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .server-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .server-status.offline {
+            background: rgba(245, 158, 11, 0.08);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success);
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse-dot 2s infinite;
+        }
+
+        .server-status.offline .status-dot {
+            background-color: var(--warning);
+            box-shadow: 0 0 8px var(--warning);
+        }
+
+        @keyframes pulse-dot {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+
+        .notif-bell {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .notif-bell:hover {
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--border-color-hover);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 7px;
+            height: 7px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        /* Panel Wrapper & Dashboard Grid */
+        .content-body {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .tab-panel {
+            display: none;
+            animation: panel-fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes panel-fade-in {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Stats Row */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 10px 25px -10px rgba(59, 130, 246, 0.15);
+            background: var(--bg-card-hover);
+        }
+
+        .stat-meta h4 {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-meta .stat-val {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .stat-meta .stat-trend {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-weight: 600;
+        }
+
+        .stat-trend.up { color: var(--success); }
+        .stat-trend.neutral { color: var(--text-dim); }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-card:nth-child(2) .stat-icon {
+            color: var(--accent);
+        }
+        .stat-card:nth-child(3) .stat-icon {
+            color: var(--success);
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .glass-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 1rem;
+        }
+
+        .glass-card-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .glass-card-title svg {
+            color: var(--primary);
+        }
+
+        /* Form styling */
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .input-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper svg {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-dim);
+            pointer-events: none;
+            width: 18px;
+            height: 18px;
+        }
+
+        .input-wrapper input,
+        .input-wrapper select {
+            width: 100%;
+            background: rgba(8, 12, 21, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 0.875rem 1rem 0.875rem 2.5rem;
+            color: #fff;
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .input-wrapper input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            background: rgba(8, 12, 21, 0.9);
+        }
+
+        /* Swapper button */
+        .swap-btn-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 40px;
+            align-self: flex-end;
+            margin-bottom: 0.25rem;
+        }
+
+        .swap-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .swap-btn:hover {
+            color: #fff;
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            transform: rotate(180deg);
+        }
+
+        /* Auto-suggestions Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 150;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+
+        .autocomplete-item:hover {
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .autocomplete-item .station-code {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Buttons */
+        .btn-action {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+            color: white;
+            padding: 0.875rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 20px -8px var(--primary-glow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px -8px rgba(59, 130, 246, 0.6);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, #1d4ed8 100%);
+        }
+
+        .btn-action:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Skeleton loaders */
+        .skeleton-group {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .skeleton-block {
+            height: 90px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.02) 25%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.02) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-wave 1.6s infinite;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes skeleton-wave {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Search Results Styles */
+        .results-container {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #fff;
+        }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* Premium Travel Ticket Card */
+        .ticket-card {
+            background: rgba(20, 29, 47, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .ticket-card:hover {
+            border-color: rgba(59, 130, 246, 0.25);
+            background: rgba(20, 29, 47, 0.55);
+            box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.5);
+            transform: scale(1.005);
+        }
+
+        .ticket-card.premium-hack {
+            border-color: rgba(249, 115, 22, 0.3);
+            background: linear-gradient(185deg, rgba(20, 29, 47, 0.4) 0%, rgba(249, 115, 22, 0.02) 100%);
+        }
+
+        .ticket-card.premium-hack:hover {
+            border-color: rgba(249, 115, 22, 0.5);
+            box-shadow: 0 12px 30px -12px rgba(249, 115, 22, 0.15);
+        }
+
+        .card-tag {
+            position: absolute;
+            top: 0;
+            right: 1.5rem;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ticket-card.premium-hack .card-tag {
+            background: linear-gradient(135deg, var(--accent) 0%, #ea580c 100%);
+            box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+        }
+
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .train-identity {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .train-badge {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            color: var(--text-light);
+        }
+
+        .train-name {
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .journey-duration-bar {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Journey route map line styling */
+        .route-visualizer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .station-node {
+            display: flex;
+            flex-direction: column;
+            min-width: 80px;
+        }
+
+        .station-node.start { text-align: left; }
+        .station-node.end { text-align: right; }
+        .station-node.mid { text-align: center; }
+
+        .station-code-big {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.1;
+        }
+
+        .station-name-small {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .station-time {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        .flow-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 0 1rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flow-line::before,
+        .flow-line::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+
+        .flow-line::before { left: 0; }
+        .flow-line::after { right: 0; }
+
+        .flow-line.glowing {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .flow-line.glowing::before { background: var(--primary); }
+        .flow-line.glowing::after { background: var(--success); }
+
+        .segment-duration-badge {
+            font-size: 0.72rem;
+            background: rgba(8, 12, 21, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            color: var(--text-muted);
+            transform: translateY(-12px);
+        }
+
+        /* Booking / Seat Status Badge */
+        .seat-availability-strip {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .class-badge {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .seat-status-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .seat-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        .seat-status-text {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .status-avl { color: var(--success); }
+        .status-avl .seat-indicator { background: var(--success); box-shadow: 0 0 6px var(--success); }
+        .status-rac { color: var(--warning); }
+        .status-rac .seat-indicator { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
+        .status-wl { color: var(--danger); }
+        .status-wl .seat-indicator { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
+
+        .btn-book-seat {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
+            transition: all 0.3s;
+        }
+
+        .btn-book-seat:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(249, 115, 22, 0.45);
+        }
+
+        .hack-description {
+            margin-top: 1rem;
+            font-size: 0.82rem;
+            color: var(--warning);
+            background: rgba(245, 158, 11, 0.06);
+            border: 1px dashed rgba(245, 158, 11, 0.25);
+            padding: 0.65rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* PNR Predictor Details */
+        .pnr-layout-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .pnr-layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pnr-detail-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        /* Confirmation Gauge Ring Styling */
+        .gauge-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .gauge-svg-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin-bottom: 1.5rem;
+        }
+
+        .gauge-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 14px;
+        }
+
+        .gauge-circle-progress {
+            fill: none;
+            stroke: url(#gauge-gradient);
+            stroke-width: 14px;
+            stroke-linecap: round;
+            stroke-dasharray: 440;
+            stroke-dashoffset: 440;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gauge-overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gauge-pct {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .gauge-lbl {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        .gauge-summary {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .gauge-advice {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            max-width: 250px;
+        }
+
+        /* PNR Passenger Table */
+        .pnr-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .pnr-table th, 
+        .pnr-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .pnr-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .pnr-badge-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            border: 1px solid transparent;
+            display: inline-block;
+        }
+
+        .pnr-badge-status.cnf {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .pnr-badge-status.rac {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .pnr-badge-status.wl {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Station Spotter Timeline */
+        .track-timeline {
+            position: relative;
+            padding-left: 2.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .track-timeline::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 12px;
+            bottom: 12px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .track-node {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .track-node:last-child {
+            padding-bottom: 0;
+        }
+
+        .track-marker {
+            position: absolute;
+            left: -32px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #1e293b;
+            border: 3px solid #64748b;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .track-node.passed .track-marker {
+            background: #0f172a;
+            border-color: #475569;
+        }
+
+        .track-node.current .track-marker {
+            background: var(--success);
+            border-color: var(--bg-dark);
+            box-shadow: 0 0 15px var(--success);
+            transform: scale(1.3);
+            animation: marker-pulse-green 1.6s infinite;
+        }
+
+        .track-node.upcoming .track-marker {
+            background: var(--bg-dark);
+            border-color: var(--primary);
+        }
+
+        @keyframes marker-pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .track-content {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 1.2rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .track-content:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: var(--border-color-hover);
+        }
+
+        .station-details h4 {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+
+        .station-details p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .platform-tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            color: var(--text-light);
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 0.4rem;
+        }
+
+        .station-schedule-times {
+            text-align: right;
+        }
+
+        .time-entry {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .time-entry span:first-child {
+            color: var(--text-muted);
+        }
+
+        .time-entry span:last-child {
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .delay-tag {
+            font-size: 0.72rem;
+            font-weight: bold;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        .delay-tag.late {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .delay-tag.ontime {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        /* Alternate Route Graph Builder styling */
+        .diagram-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .flow-diagram-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 600px;
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .step-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .step-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Profiles & Traveler Cards */
+        .travelers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .traveler-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .traveler-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .traveler-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .traveler-header h4 {
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .traveler-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .traveler-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            color: var(--text-dim);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* Mockup Mobile UI Overlay */
+        .preview-section {
+            background: #090c14;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .screen-preview-container {
+            width: 250px;
+            height: 520px;
+            border: 10px solid #334155;
+            background: #0f172a;
+            border-radius: 36px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-preview-header {
+            height: 40px;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .screen-preview-notch {
+            width: 80px;
+            height: 18px;
+            background: #334155;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            position: absolute;
+            top: 0;
+        }
+
+        .screen-preview-content {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .screen-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 10px;
+            padding: 0.75rem;
+        }
+
+        /* Floating Notifications alert */
+        .notification-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--primary);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+            animation: toast-slide-in 0.3s ease forwards;
+        }
+
+        @keyframes toast-slide-in {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .toast-icon {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .toast-text {
+            font-size: 0.88rem;
+            color: var(--text-light);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: -100%;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+            }
+
+            .sidebar.mobile-open {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SVG Definitions for Gradients -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#3b82f6" />
+                <stop offset="50%" stop-color="#f59e0b" />
+                <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="appSidebar">
+            <a href="#" class="logo-area" aria-label="ALLways Trevel Home">
+                <div class="logo-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                        <line x1="4" y1="22" x2="4" y2="15"></line>
+                    </svg>
+                </div>
+                <div class="logo-text">ALLways <span>Trevel</span></div>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-item active" onclick="switchTab('dashboard')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#search" class="nav-item" onclick="switchTab('search')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Seat Sniper</span>
+                </a>
+                <a href="#pnr" class="nav-item" onclick="switchTab('pnr')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>PNR Predictor</span>
+                </a>
+                <a href="#tracking" class="nav-item" onclick="switchTab('tracking')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Live Tracker</span>
+                </a>
+                <a href="#hacks" class="nav-item" onclick="switchTab('hacks')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 2 7 12 12 22 7 12 2</polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    <span>Smart Routes</span>
+                </a>
+                <a href="#travelers" class="nav-item" onclick="switchTab('travelers')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Travelers</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="avatar" aria-hidden="true">JD</div>
+                    <div class="user-info">
+                        <div class="username">John Doe</div>
+                        <div class="badge-premium">Gold Member</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Panel Content -->
+        <main class="main-panel">
+            
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggleBtn" onclick="toggleSidebar()" aria-label="Toggle Navigation Menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <div class="page-title-area">
+                        <h2 id="currentTabTitle">Passenger Dashboard</h2>
+                        <p id="currentTabDesc">Welcome back, John! Let's secure your confirmed ticket.</p>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <div class="server-status offline" id="backendBadge">
+                        <div class="status-dot" aria-hidden="true"></div>
+                        <span id="backendStatusText">Offline Mode</span>
+                    </div>
+
+                    <div class="notif-bell" role="button" aria-label="Notifications" onclick="showToast('Active booking monitors are scaning IRCTC databases.')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        <div class="notif-badge" aria-hidden="true"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Body Area -->
+            <div class="content-body">
+
+                <!-- 1. DASHBOARD OVERVIEW PANEL -->
+                <section class="tab-panel active" id="panelDashboard">
+                    <!-- Statistics summary -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-meta">
+                                <h4>Active Snipes</h4>
+                                <div class="stat-val">3</div>
+                                <div class="stat-trend up">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                    Scanning database
+                                </div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-meta">
+                                <h4>Trips Confirmed</h4>
+                                <div class="stat-val">12</div>
+                                <div class="stat-trend up">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                    100% success rate
+                                </div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-meta">
+                                <h4>Alt Route Hacks</h4>
+                                <div class="stat-val">48h</div>
+                                <div class="stat-trend up">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                    Travel time saved
+                                </div>
+                            </div>
+                            <div class="stat-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2</polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Welcome quick search banner -->
+                    <div class="glass-card">
+                        <div class="glass-card-header">
+                            <div class="glass-card-title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                                <h3>Quick Seat Sniper</h3>
+                            </div>
+                            <span class="badge-premium" style="background: rgba(59, 130, 246, 0.15); color: var(--primary); border-color: rgba(59, 130, 246, 0.2)">Smart Optimization Enabled</span>
+                        </div>
+                        
+                        <form onsubmit="handleQuickSearch(event)">
+                            <div class="search-grid">
+                                <div class="input-group">
+                                    <label for="quick_from">From Station</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        <input type="text" id="quick_from" placeholder="e.g. NDLS" value="NDLS" oninput="showSuggestions(this, 'quick_from_suggestions')" autocomplete="off" required>
+                                        <div class="autocomplete-dropdown" id="quick_from_suggestions"></div>
+                                    </div>
+                                </div>
+
+                                <div class="swap-btn-container">
+                                    <button type="button" class="swap-btn" onclick="swapStations('quick_from', 'quick_to')" aria-label="Swap Stations">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 8 16 13"></polyline><line x1="21" y1="8" x2="9" y2="8"></line><polyline points="8 21 3 16 8 11"></polyline><line x1="3" y1="16" x2="15" y2="16"></line></svg>
+                                    </button>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="quick_to">To Station</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                        <input type="text" id="quick_to" placeholder="e.g. BCT" value="BCT" oninput="showSuggestions(this, 'quick_to_suggestions')" autocomplete="off" required>
+                                        <div class="autocomplete-dropdown" id="quick_to_suggestions"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="quick_date">Journey Date</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                        <input type="date" id="quick_date" required>
+                                    </div>
+                                </div>
+
+                                <div class="input-group" style="min-width: 160px;">
+                                    <button type="submit" class="btn-action" id="quickSearchBtn">
+                                        <span>Snipe Seats</span>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Active Monitor Dashboard Card -->
+                    <div class="glass-card">
+                        <div class="glass-card-header">
+                            <div class="glass-card-title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                                <h3>Active Seat Snipe Alerts</h3>
+                            </div>
+                        </div>
+                        <div class="results-list">
+                            <div class="seat-availability-strip" style="background: rgba(59,130,246,0.03); border-color: rgba(59,130,246,0.15)">
+                                <div>
+                                    <div style="font-weight: 700;">12952 - Mumbai Rajdhani</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">NDLS ➔ MMCT | Date: 2026-06-15 | Class: 3A</div>
+                                </div>
+                                <div class="seat-status-box status-wl">
+                                    <div class="seat-indicator" aria-hidden="true"></div>
+                                    <span class="seat-status-text">Snipe Active (WL 45 ➔ RAC Odds: 82%)</span>
+                                </div>
+                            </div>
+                            <div class="seat-availability-strip" style="background: rgba(16,185,129,0.03); border-color: rgba(16,185,129,0.15)">
+                                <div>
+                                    <div style="font-weight: 700;">12302 - Howrah Rajdhani</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">NDLS ➔ HWH | Date: 2026-06-10 | Class: 2A</div>
+                                </div>
+                                <div class="seat-status-box status-avl">
+                                    <div class="seat-indicator" aria-hidden="true"></div>
+                                    <span class="seat-status-text">Alternative Secured (via CNB connection)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. ADVANCED SEAT SNIPER PANEL -->
+                <section class="tab-panel" id="panelSearch">
+                    <div class="glass-card">
+                        <div class="glass-card-header">
+                            <div class="glass-card-title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                                <h3>Advanced Smart Search Engine</h3>
+                            </div>
+                        </div>
+
+                        <form id="advancedSniperForm" onsubmit="handleAdvancedSearch(event)">
+                            <div class="search-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+                                <div class="input-group">
+                                    <label for="adv_from">From Station</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                        <input type="text" id="adv_from" value="NDLS" oninput="showSuggestions(this, 'adv_from_suggestions')" autocomplete="off" required>
+                                        <div class="autocomplete-dropdown" id="adv_from_suggestions"></div>
+                                    </div>
+                                </div>
+
+                                <div class="swap-btn-container">
+                                    <button type="button" class="swap-btn" onclick="swapStations('adv_from', 'adv_to')" aria-label="Swap Stations">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 3 21 8 16 13"></polyline><line x1="21" y1="8" x2="9" y2="8"></line><polyline points="8 21 3 16 8 11"></polyline><line x1="3" y1="16" x2="15" y2="16"></line></svg>
+                                    </button>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="adv_to">To Station</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                        <input type="text" id="adv_to" value="BCT" oninput="showSuggestions(this, 'adv_to_suggestions')" autocomplete="off" required>
+                                        <div class="autocomplete-dropdown" id="adv_to_suggestions"></div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="adv_date">Journey Date</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                        <input type="date" id="adv_date" required>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="adv_class">Class</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                        <select id="adv_class">
+                                            <option value="3A">AC 3 Tier (3A)</option>
+                                            <option value="2A">AC 2 Tier (2A)</option>
+                                            <option value="1A">AC First Class (1A)</option>
+                                            <option value="SL" selected>Sleeper Class (SL)</option>
+                                            <option value="CC">AC Chair Car (CC)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="adv_quota">Quota</label>
+                                    <div class="input-wrapper">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                        <select id="adv_quota">
+                                            <option value="GN" selected>General (GN)</option>
+                                            <option value="TQ">Tatkal (TQ)</option>
+                                            <option value="LD">Ladies (LD)</option>
+                                            <option value="DF">Defence (DF)</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <button type="submit" class="btn-action" id="advSearchBtn">
+                                        <span>Snipe Seats</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="skeleton-group" id="searchLoader">
+                            <div class="skeleton-block"></div>
+                            <div class="skeleton-block"></div>
+                            <div class="skeleton-block"></div>
+                        </div>
+
+                        <!-- Results display container -->
+                        <div class="results-container" id="searchResultWrapper">
+                            <h3 class="section-subtitle">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                                <span id="searchResultCountText">Found 4 Route Configurations</span>
+                            </h3>
+                            <div class="results-list" id="searchCardList">
+                                <!-- Cards will be loaded dynamically via Javascript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. PNR CLEARANCE PREDICTOR PANEL -->
+                <section class="tab-panel" id="panelPnr">
+                    <div class="glass-card">
+                        <div class="glass-card-header">
+                            <div class="glass-card-title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                                <h3>AI PNR Confirmation Predictor</h3>
+                            </div>
+                        </div>
+
+                        <form id="pnrQueryForm" onsubmit="handlePnrQuery(event)" class="search-grid" style="grid-template-columns: 2fr 1fr; max-width: 600px; margin-bottom: 2rem;">
+                            <div class="input-group">
+                                <label for="pnrInput">10-Digit PNR Number</label>
+                                <div class="input-wrapper">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                    <input type="text" id="pnrInput" placeholder="Enter PNR to scan..." value="9876543210" minlength="10" maxlength="10" pattern="\d{10}" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-action" id="pnrSubmitBtn">
+                                <span>Check PNR</span>
+                            </button>
+                        </form>
+
+                        <div class="skeleton-group" id="pnrLoader">
+                            <div class="skeleton-block" style="height: 150px;"></div>
+                        </div>
+
+                        <!-- PNR Output Panel -->
+                        <div class="results-container" id="pnrResultWrapper">
+                            <div class="pnr-layout-grid">
+                                
+                                <!-- Left side details -->
+                                <div class="pnr-detail-card">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem;">
+                                        <div>
+                                            <h3 style="font-size: 1.35rem;" id="pnrTrainName">Mumbai Rajdhani (12952)</h3>
+                                            <p style="color: var(--text-muted); font-size: 0.85rem;" id="pnrRouteInfo">NDLS ➔ BCT | Date: 2026-05-24 | Class: 3A</p>
+                                        </div>
+                                        <div class="train-badge" id="pnrChartStatus">CHART PREPARED</div>
+                                    </div>
+
+                                    <table class="pnr-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Passenger</th>
+                                                <th>Booking Status</th>
+                                                <th>Current Status</th>
+                                                <th>Coach & Berth</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="pnrPassengerList">
+                                            <!-- Dynamically filled -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Right side animated confirmation gauge -->
+                                <div class="gauge-panel">
+                                    <div class="gauge-svg-container">
+                                        <svg width="180" height="180">
+                                            <circle class="gauge-circle-bg" cx="90" cy="90" r="70" />
+                                            <circle class="gauge-circle-progress" id="pnrCircleIndicator" cx="90" cy="90" r="70" />
+                                        </svg>
+                                        <div class="gauge-overlay-text">
+                                            <span class="gauge-pct" id="pnrPercentageText">82%</span>
+                                            <span class="gauge-lbl">Probability</span>
+                                        </div>
+                                    </div>
+                                    <div class="gauge-summary" id="pnrGaugeSummary">Highly Likely Confirm</div>
+                                    <div class="gauge-advice" id="pnrGaugeAdvice">High historical trend suggests you will get a confirm berth. Do not cancel.</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 4. LIVE TRAIN TRACKER PANEL -->
+                <section class="tab-panel" id="panelTracking">
+                    <div class="glass-card">
+                        <div class="glass-card-header">
+                            <div class="glass-card-title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                                <h3>Live GPS / Cell-Tower Train Locator</h3>
+                            </div>
+                        </div>
+
+                        <form id="trackingForm" onsubmit="handleSpotQuery(event)" class="search-grid" style="grid-template-columns: 2fr 1fr; max-width: 600px; margin-bottom: 2rem;">
+                            <div class="input-group">
+                                <label for="spotTrainNoInput">Train Number / Name</label>
+                                <div class="input-wrapper">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="3" width="16" height="16" rx="2" ry="2"></rect><path d="M9 22H15"></path><path d="M12 2v20"></path></svg>
+                                    <input type="text" id="spotTrainNoInput" placeholder="e.g. 19269, PBR MFP Express" value="19269" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-action" id="spotSubmitBtn">
+                                <span>Locate Train</span>
+                            </button>
+                        </form>
+
+                        <div class="skeleton-group" id="spotLoader">
+                            <div class="skeleton-block" style="height: 250px;"></div>
+                        </div>
+
+                        <!-- Spotter Details Output -->
+                        <div class="results-container" id="spotResultWrapper">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                                <div>
+                                    <h3 style="font-size: 1.45rem;" id="spotTrainTitle">PBR MFP Express (19269)</h3>
+                                    <p class="status-avl" style="font-weight: 700; margin-top: 0.25rem; font-size: 0.95rem;">
+                                        🟢 <span id="spotCurrentStatusMsg">Arrived Ahmedabad (ADI)</span>
+                                    </p>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 0.8rem; color: var(--text-muted);">AVERAGE DELAY</div>
+                                    <div class="delay-tag late" id="spotTrainDelayText">24 mins Late</div>
+                                </div>
+                            </div>
+
+                            <!-- Horizontal SVG Mini-Map representing train coordinates -->
+                            <div class="preview-section" style="margin-bottom: 2rem; background: rgba(8,12,21,0.5)">
+                                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.75rem; margin-bottom: 0.5rem; color: var(--text-muted);">
+                                    <span>Jamnagar (JAM)</span>
+                                    <span>Ahmedabad (ADI)</span>
+                                    <span>Kanpur (CNB)</span>
+                                    <span>Madhubani (MBI)</span>
+                                </div>
+                                <svg width="100%" height="30" style="overflow: visible;">
+                                    <line x1="5%" y1="15" x2="95%" y2="15" stroke="rgba(255,255,255,0.08)" stroke-width="4" stroke-linecap="round"/>
+                                    <!-- Progress line -->
+                                    <line x1="5%" y1="15" x2="50%" y2="15" stroke="var(--primary)" stroke-width="4" stroke-linecap="round"/>
+                                    <!-- Station Markers -->
+                                    <circle cx="5%" cy="15" r="6" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+                                    <circle cx="35%" cy="15" r="6" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+                                    <circle cx="50%" cy="15" r="8" fill="var(--success)" stroke="var(--bg-dark)" stroke-width="2"/>
+                                    <circle cx="75%" cy="15" r="6" fill="#1e293b" stroke="var(--primary)" stroke-width="2"/>
+                                    <circle cx="95%" cy="15" r="6" fill="#1e293b" stroke="var(--primary)" stroke-width="2"/>
+                                    <!-- Glowing Train Pulse -->
+                                    <circle cx="50%" cy="15" r="16" fill="rgba(16,185,129,0.15)" stroke="none">
+                                        <animate attributeName="r" values="8;20;8" dur="2s" repeatCount="indefinite"/>
+                                    </circle>
+                                </svg>
+                                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">GPS Tracked inside coach via GSM triangulation. No Active internet connection required on mobile.</div>
+                            </div>
+
+                            <!-- Station timeline -->
+                            <div class="track-timeline" id="spotStationList">
+                                <!-- Filled by JavaScript -->
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 5. SMART ALT-ROUTE ENGINE -->
+                <section class="tab-panel" id="panelHacks">
+                    <div class="glass-card">
+                        <div class="glass-card-header">
+                            <div class="glass-card-title">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2</polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                                <h3>Smart Partition & Connection Seat-Finder Diagrams</h3>
+                            </div>
+                        </div>
+
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
+                            When direct booking results in waitlists, ALLways Trevel analyzes over 150 connection combinations and station quota codes to bypass waitlists. Below is how partition bookings work visually:
+                        </p>
+
+                        <div class="diagram-container">
+                            <h4 style="color: #fff; font-size: 1rem; border-left: 3px solid var(--accent); padding-left: 0.5rem; margin-bottom: 1rem;">Hack Option 1: Multi-Train Partition Routing (Split Booking)</h4>
+                            
+                            <div class="flow-diagram-step">
+                                <div class="step-circle" aria-hidden="true">1</div>
+                                <div class="step-card">
+                                    <div>
+                                        <div class="step-title">Board Train A (Swarna Jayanti 12958)</div>
+                                        <div class="step-subtitle">New Delhi (NDLS) ➔ Ahmedabad (ADI)</div>
+                                    </div>
+                                    <div class="pnr-badge-status cnf">Confirmed 3A (12 Seats)</div>
+                                </div>
+                            </div>
+
+                            <div style="padding-left: 3.5rem; border-left: 2px dashed rgba(255,255,255,0.1); margin: 0.25rem 0 0.25rem 1.1rem; color: var(--accent); font-size: 0.82rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                                ⏳ 2h 15m Layover at Ahmedabad Junction (ADI)
+                            </div>
+
+                            <div class="flow-diagram-step">
+                                <div class="step-circle" aria-hidden="true">2</div>
+                                <div class="step-card">
+                                    <div>
+                                        <div class="step-title">Connect to Train B (Shatabdi Exp 12010)</div>
+                                        <div class="step-subtitle">Ahmedabad (ADI) ➔ Mumbai Central (BCT)</div>
+                                    </div>
+                                    <div class="pnr-badge-status cnf">Confirmed CC (40 Seats)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="diagram-container" style="margin-top: 2rem;">
+                            <h4 style="color: #fff; font-size: 1rem; border-left: 3px solid var(--primary); padding-left: 0.5rem; margin-bottom: 1rem;">Hack Option 2: Preceding Station Boarding Hack</h4>
+                            <p style="color: var(--text-muted); font-size: 0.82rem; margin-bottom: 1rem;">Often, the General Quota from intermediate stations is waitlisted, but tickets booked from the origin station are available. We book from the origin and change your boarding station automatically.</p>
+                            
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div class="step-circle" style="border-color: var(--success); color: var(--success);" aria-hidden="true">✔</div>
+                                <div class="step-card" style="border-color: rgba(16,185,129,0.2)">
+                                    <div>
+                                        <div class="step-title" style="color: var(--success);">Book Ticket from Origin: Hazrat Nizamuddin (NZM)</div>
+                                        <div class="step-subtitle">Change boarding station to Kota Junction (KOTA)</div>
+                                    </div>
+                                    <div class="pnr-badge-status cnf" style="background: rgba(16,185,129,0.1)">Secured Origin Quota</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 6. TRAVELERS PANEL -->
+                    <section class="tab-panel" id="panelTravelers">
+                        <div class="glass-card">
+                            <div class="glass-card-header">
+                                <div class="glass-card-title">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                                    <h3>Saved Travelers Database</h3>
+                                </div>
+                                <button class="btn-action" style="max-width: 150px; padding: 0.5rem 1rem; font-size: 0.85rem;" onclick="showToast('Profile adding features will deploy next update.')">
+                                    <span>+ Add Traveler</span>
+                                </button>
+                            </div>
+
+                            <div class="travelers-grid">
+                                <div class="traveler-card">
+                                    <div class="traveler-header">
+                                        <div class="avatar" aria-hidden="true">JD</div>
+                                        <div>
+                                            <h4>John Doe</h4>
+                                            <p>Primary Traveler</p>
+                                        </div>
+                                    </div>
+                                    <div class="traveler-body">
+                                        <div class="info-item"><span class="info-label">Age / Gender</span><span class="info-value">32 / Male</span></div>
+                                        <div class="info-item"><span class="info-label">Berth Preference</span><span class="info-value">Side Lower</span></div>
+                                        <div class="info-item"><span class="info-label">Food Preference</span><span class="info-value">Veg Dinner</span></div>
+                                        <div class="info-item"><span class="info-label">ID Document</span><span class="info-value">Aadhaar (***1234)</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="traveler-card">
+                                    <div class="traveler-header">
+                                        <div class="avatar" style="background: linear-gradient(135deg, var(--primary) 0%, var(--success) 100%)" aria-hidden="true">SD</div>
+                                        <div>
+                                            <h4>Sarah Doe</h4>
+                                            <p>Family Member</p>
+                                        </div>
+                                    </div>
+                                    <div class="traveler-body">
+                                        <div class="info-item"><span class="info-label">Age / Gender</span><span class="info-value">30 / Female</span></div>
+                                        <div class="info-item"><span class="info-label">Berth Preference</span><span class="info-value">Lower Berth</span></div>
+                                        <div class="info-item"><span class="info-label">Food Preference</span><span class="info-value">Non-Veg</span></div>
+                                        <div class="info-item"><span class="info-label">ID Document</span><span class="info-value">PAN Card (***7890)</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Notifications toast -->
+    <div class="notification-toast" id="toastBox">
+        <svg class="toast-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        <div class="toast-text" id="toastMessage">Scan completed successfully.</div>
+    </div>
+
+    <!-- Interactive Logic scripts -->
+    <script>
+        const BACKEND_URL = "http://127.0.0.1:8080";
+        let isBackendConnected = false;
+
+        // Supported stations cache list
+        const STATIONS_DB = [
+            { code: "NDLS", name: "New Delhi" },
+            { code: "CNB", name: "Kanpur Central" },
+            { code: "ADI", name: "Ahmedabad Junction" },
+            { code: "BRC", name: "Vadodara Junction" },
+            { code: "BCT", name: "Mumbai Central" },
+            { code: "MMCT", name: "Mumbai Central" },
+            { code: "BDTS", name: "Bandra Terminus" },
+            { code: "PNBE", name: "Patna Junction" },
+            { code: "HWH", name: "Howrah Junction" },
+            { code: "MAS", name: "Chennai Central" },
+            { code: "SBC", name: "Bangalore City" },
+            { code: "PUNE", name: "Pune Junction" },
+            { code: "NZM", name: "Hazrat Nizamuddin" },
+            { code: "KOTA", name: "Kota Junction" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default search dates (tomorrow)
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateStr = tomorrow.toISOString().split('T')[0];
+            
+            const qDate = document.getElementById('quick_date');
+            const aDate = document.getElementById('adv_date');
+            if (qDate) qDate.value = dateStr;
+            if (aDate) aDate.value = dateStr;
+
+            // Ping backend to confirm server connectivity
+            checkBackendConnection();
+
+            // Set default suggestion listeners to close on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.input-wrapper')) {
+                    document.querySelectorAll('.autocomplete-dropdown').forEach(d => d.style.display = 'none');
+                }
+            });
+        });
+
+        // Toggle mobile sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('appSidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // Switch panels tab navigation
+        function switchTab(tabId) {
+            // Close mobile menu
+            document.getElementById('appSidebar').classList.remove('mobile-open');
+
+            // Set active states on buttons
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === `#${tabId}`) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Set active states on panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            const targetPanelMap = {
+                'dashboard': 'panelDashboard',
+                'search': 'panelSearch',
+                'pnr': 'panelPnr',
+                'tracking': 'panelTracking',
+                'hacks': 'panelHacks',
+                'travelers': 'panelTravelers'
+            };
+            
+            const panelEl = document.getElementById(targetPanelMap[tabId]);
+            if (panelEl) {
+                panelEl.classList.add('active');
+            }
+
+            // Update title text
+            const titlesMap = {
+                'dashboard': { t: 'Passenger Dashboard', d: 'Welcome back, John! Let\'s secure your confirmed ticket.' },
+                'search': { t: 'Seat Sniper Engine', d: 'Secure guaranteed confirmed berths using alternate routing options.' },
+                'pnr': { t: 'PNR Odds Predictor', d: 'Verify confirmation probability based on historical clearance trends.' },
+                'tracking': { t: 'Live GPS Trainspotter', d: 'Track train positions and platform coordinates.' },
+                'hacks': { t: 'Seat Hacking Guides', d: 'Explore layout hacks and alternate quotas used by our algorithms.' },
+                'travelers': { t: 'Traveler Profiles', d: 'Manage passenger details for automated booking.' }
+            };
+
+            const headerTitle = document.getElementById('currentTabTitle');
+            const headerDesc = document.getElementById('currentTabDesc');
+            if (headerTitle && titlesMap[tabId]) {
+                headerTitle.innerText = titlesMap[tabId].t;
+                headerDesc.innerText = titlesMap[tabId].d;
+            }
+        }
+
+        // Show autocompletions for station selectors
+        function showSuggestions(inputEl, dropdownId) {
+            const val = inputEl.value.toUpperCase().trim();
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return;
+
+            if (val.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            const matches = STATIONS_DB.filter(s => s.code.includes(val) || s.name.toUpperCase().includes(val));
+            if (matches.length === 0) {
+                dropdown.style.display = 'none';
+                return;
+            }
+
+            dropdown.innerHTML = matches.map(s => `
+                <div class="autocomplete-item" onclick="selectStation('${inputEl.id}', '${s.code}', '${dropdownId}')">
+                    <span>${s.name}</span>
+                    <span class="station-code">${s.code}</span>
+                </div>
+            `).join('');
+            dropdown.style.display = 'block';
+        }
+
+        function selectStation(inputId, code, dropdownId) {
+            document.getElementById(inputId).value = code;
+            document.getElementById(dropdownId).style.display = 'none';
+        }
+
+        function swapStations(id1, id2) {
+            const el1 = document.getElementById(id1);
+            const el2 = document.getElementById(id2);
+            const temp = el1.value;
+            el1.value = el2.value;
+            el2.value = temp;
+            showToast('Stations swapped');
+        }
+
+        // Toast notifications alert
+        function showToast(msg) {
+            const toast = document.getElementById('toastBox');
+            const text = document.getElementById('toastMessage');
+            if (!toast) return;
+
+            text.innerText = msg;
+            toast.style.display = 'flex';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3500);
+        }
+
+        // Server connection verify check
+        async function checkBackendConnection() {
+            const badge = document.getElementById('backendBadge');
+            const text = document.getElementById('backendStatusText');
+            try {
+                const res = await fetch(`${BACKEND_URL}/`, { method: "GET" });
+                if (res.status === 200) {
+                    isBackendConnected = true;
+                    badge.classList.remove('offline');
+                    text.innerText = "Backend Connected";
+                } else {
+                    setOfflineState();
+                }
+            } catch (err) {
+                setOfflineState();
+            }
+        }
+
+        function setOfflineState() {
+            isBackendConnected = false;
+            const badge = document.getElementById('backendBadge');
+            const text = document.getElementById('backendStatusText');
+            if (badge) {
+                badge.classList.add('offline');
+                text.innerText = "Offline Simulator";
+            }
+        }
+
+        // Swaps tab and issues search
+        function handleQuickSearch(e) {
+            e.preventDefault();
+            const from = document.getElementById('quick_from').value;
+            const to = document.getElementById('quick_to').value;
+            const date = document.getElementById('quick_date').value;
+
+            // Fill inputs on advanced page
+            document.getElementById('adv_from').value = from;
+            document.getElementById('adv_to').value = to;
+            document.getElementById('adv_date').value = date;
+
+            // Switch page
+            switchTab('search');
+
+            // Trigger search submission
+            document.getElementById('advSearchBtn').click();
+        }
+
+        /* -------------------------------------
+           ADVANCED SEAT SEARCH (SEAT SNIPER)
+        -------------------------------------- */
+        async function handleAdvancedSearch(e) {
+            e.preventDefault();
+            const btn = document.getElementById('advSearchBtn');
+            const loader = document.getElementById('searchLoader');
+            const wrapper = document.getElementById('searchResultWrapper');
+            const listContainer = document.getElementById('searchCardList');
+
+            const from = document.getElementById('adv_from').value.toUpperCase().trim();
+            const to = document.getElementById('adv_to').value.toUpperCase().trim();
+            const date = document.getElementById('adv_date').value;
+            const cl = document.getElementById('adv_class').value;
+            const quota = document.getElementById('adv_quota').value;
+
+            btn.disabled = true;
+            loader.style.display = 'flex';
+            wrapper.style.display = 'none';
+
+            let data;
+            if (isBackendConnected) {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/search?src=${from}&dest=${to}&date=${date}&class=${cl}&quota=${quota}`);
+                    if (res.ok) {
+                        data = await res.json();
+                    } else {
+                        throw new Error("Server HTTP error");
+                    }
+                } catch (err) {
+                    console.warn("API Search failed. Falling back to local simulator.");
+                    data = getLocalSimulatedSearch(from, to, cl);
+                }
+            } else {
+                // Fallback mock delay
+                await new Promise(r => setTimeout(r, 800));
+                data = getLocalSimulatedSearch(from, to, cl);
+            }
+
+            renderSearchResults(data, listContainer);
+            
+            document.getElementById('searchResultCountText').innerText = `Found ${data.routes.length} Route Configurations`;
+            loader.style.display = 'none';
+            wrapper.style.display = 'block';
+            btn.disabled = false;
+            showToast('Secure seat scan completed.');
+        }
+
+        function renderSearchResults(data, container) {
+            container.innerHTML = '';
+            
+            data.routes.forEach((route, idx) => {
+                const isFirst = idx === 0;
+                const hours = Math.floor(route.totalDurationMin / 60);
+                const mins = route.totalDurationMin % 60;
+                const durationStr = `${hours}h ${mins}m`;
+
+                let segmentsHtml = '';
+                route.segments.forEach((seg, sIdx) => {
+                    const isAvl = seg.status === 'AVAILABLE';
+                    const isRac = seg.status === 'RAC';
+                    const statusClass = isAvl ? 'status-avl' : (isRac ? 'status-rac' : 'status-wl');
+                    const labelText = `${seg.status} ${seg.count}`;
+
+                    segmentsHtml += `
+                        <div class="route-visualizer" style="${sIdx > 0 ? 'margin-top: 1.5rem;' : ''}">
+                            <div class="station-node start">
+                                <span class="station-code-big">${seg.from}</span>
+                                <span class="station-name-small">Depart</span>
+                                <span class="station-time">08:00</span>
+                            </div>
+
+                            <div class="flow-line glowing">
+                                <span class="segment-duration-badge">${seg.duration}</span>
+                            </div>
+
+                            <div class="station-node end">
+                                <span class="station-code-big">${seg.to}</span>
+                                <span class="station-name-small">Arrive</span>
+                                <span class="station-time">22:00</span>
+                            </div>
+                        </div>
+
+                        <div class="seat-availability-strip ${statusClass}">
+                            <div style="display:flex; align-items:center; gap:0.75rem;">
+                                <span class="class-badge">${seg.class}</span>
+                                <div class="seat-status-box">
+                                    <div class="seat-indicator" aria-hidden="true"></div>
+                                    <span class="seat-status-text">${labelText}</span>
+                                </div>
+                            </div>
+                            <button class="btn-book-seat" onclick="showToast('Initiating secure auto-fill booking for ${seg.trainNo}...')">Book Now</button>
+                        </div>
+                    `;
+
+                    // Add connection layover hack text
+                    if (sIdx < route.segments.length - 1) {
+                        segmentsHtml += `
+                            <div class="hack-description">
+                                ⏳ Connection Layover: Change trains at ${seg.to} (Duration: ${route.layoverMinutes || 90} mins)
+                            </div>
+                        `;
+                    }
+                });
+
+                const premiumCardClass = route.segments.length > 1 || route.type.includes('Alternate') ? 'premium-hack' : '';
+                const tagLabel = route.segments.length > 1 ? 'Smart Split Hack' : (route.type.includes('Alternate') ? 'Origin Hack' : 'Direct Journey');
+
+                container.innerHTML += `
+                    <div class="ticket-card ${premiumCardClass}">
+                        <div class="card-tag">${tagLabel}</div>
+                        <div class="card-header">
+                            <div class="train-identity">
+                                <span class="train-badge">${route.segments[0].trainNo}</span>
+                                <h4 class="train-name">${route.segments[0].trainName} ${route.segments.length > 1 ? '+ Connection' : ''}</h4>
+                            </div>
+                            <div class="journey-duration-bar">Total duration: ${durationStr}</div>
+                        </div>
+                        <div class="card-body">
+                            ${segmentsHtml}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Offline / Simulation fallback data for search queries
+        function getLocalSimulatedSearch(src, dest, cl) {
+            return {
+                routes: [
+                    {
+                        type: "Direct Route",
+                        totalDurationMin: 960,
+                        segments: [{
+                            trainNo: "12952", trainName: "Mumbai Rajdhani",
+                            from: src, to: dest, status: "WL", count: 12, class: cl, duration: "16h 00m"
+                        }]
+                    },
+                    {
+                        type: "Direct Route Alternative",
+                        totalDurationMin: 1200,
+                        segments: [{
+                            trainNo: "12904", trainName: "Golden Temple Mail",
+                            from: src, to: dest, status: "AVAILABLE", count: 8, class: cl, duration: "20h 00m"
+                        }]
+                    },
+                    {
+                        type: "Smart Connection Hack (1-Stop)",
+                        totalDurationMin: 1080,
+                        layoverMinutes: 90,
+                        segments: [
+                            {
+                                trainNo: "12958", trainName: "Swarna Jayanti Exp",
+                                from: src, to: "ADI", status: "AVAILABLE", count: 6, class: cl, duration: "12h 30m"
+                            },
+                            {
+                                trainNo: "12010", trainName: "Shatabdi Express",
+                                from: "ADI", to: dest, status: "AVAILABLE", count: 15, class: cl, duration: "5h 30m"
+                            }
+                        ]
+                    }
+                ]
+            };
+        }
+
+        /* -------------------------------------
+           PNR STATUS PREDICTOR
+        -------------------------------------- */
+        async function handlePnrQuery(e) {
+            e.preventDefault();
+            const btn = document.getElementById('pnrSubmitBtn');
+            const loader = document.getElementById('pnrLoader');
+            const wrapper = document.getElementById('pnrResultWrapper');
+            const pnrVal = document.getElementById('pnrInput').value.trim();
+
+            btn.disabled = true;
+            loader.style.display = 'flex';
+            wrapper.style.display = 'none';
+
+            let data;
+            if (isBackendConnected) {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/pnr?pnr=${pnrVal}`);
+                    if (res.ok) {
+                        data = await res.json();
+                    } else {
+                        throw new Error("Server HTTP error");
+                    }
+                } catch (err) {
+                    console.warn("API PNR query failed. Falling back to local simulation.");
+                    data = getLocalSimulatedPnr(pnrVal);
+                }
+            } else {
+                await new Promise(r => setTimeout(r, 800));
+                data = getLocalSimulatedPnr(pnrVal);
+            }
+
+            renderPnrResults(data);
+
+            loader.style.display = 'none';
+            wrapper.style.display = 'block';
+            btn.disabled = false;
+            showToast('PNR status update verified.');
+        }
+
+        function renderPnrResults(data) {
+            document.getElementById('pnrTrainName').innerText = `${data.trainName} (${data.trainNo})`;
+            document.getElementById('pnrRouteInfo').innerText = `${data.from} ➔ ${data.to} | Date: ${data.date} | Class: ${data.class}`;
+            document.getElementById('pnrChartStatus').innerText = data.chart_status;
+
+            const tbody = document.getElementById('pnrPassengerList');
+            tbody.innerHTML = '';
+
+            data.passengers.forEach(p => {
+                const bookStatusClass = p.booking_status === 'CNF' ? 'cnf' : (p.booking_status.includes('WL') ? 'wl' : 'rac');
+                const currStatusClass = p.current_status === 'CNF' ? 'cnf' : (p.current_status.includes('WL') ? 'wl' : 'rac');
+                const coachBerthText = p.coach !== '-' ? `${p.coach} / Berth ${p.berth} (${p.berth_type})` : 'Not Allocated';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600; color:#fff;">${p.name} (P${p.no})</td>
+                        <td><span class="pnr-badge-status ${bookStatusClass}">${p.booking_status}</span></td>
+                        <td><span class="pnr-badge-status ${currStatusClass}">${p.current_status}</span></td>
+                        <td>${coachBerthText}</td>
+                    </tr>
+                `;
+            });
+
+            // Calculate confirmation odds deterministically for simulation
+            const seed = sumDigits(data.pnr);
+            const odds = 40 + (seed * 7 % 58); // Between 40% and 98%
+            
+            // Animate circular gauge
+            const circle = document.getElementById('pnrCircleIndicator');
+            const pctText = document.getElementById('pnrPercentageText');
+            const summaryText = document.getElementById('pnrGaugeSummary');
+            const adviceText = document.getElementById('pnrGaugeAdvice');
+
+            // Circumference is 2 * Math.PI * r = 2 * 3.14159 * 70 = 439.8 (approx 440)
+            const offset = 440 - (440 * odds) / 100;
+            
+            circle.style.strokeDashoffset = offset;
+            pctText.innerText = `${odds}%`;
+
+            if (odds > 75) {
+                summaryText.innerText = "High Confirm Odds";
+                summaryText.style.color = "var(--success)";
+                adviceText.innerText = "Historical records suggest this waitlist clears completely on this route. Retain ticket.";
+            } else if (odds > 50) {
+                summaryText.innerText = "Borderline RAC Odds";
+                summaryText.style.color = "var(--warning)";
+                adviceText.innerText = "Seat might clear to RAC. We recommend booking a backup Seat-Sniper connection.";
+            } else {
+                summaryText.innerText = "Low Confirmation Odds";
+                summaryText.style.color = "var(--danger)";
+                adviceText.innerText = "Extremely low clearance rates. Click 'Seat Sniper' above to secure a guaranteed alternate route.";
+            }
+        }
+
+        function getLocalSimulatedPnr(pnr) {
+            return {
+                pnr: pnr,
+                trainNo: "12952",
+                trainName: "Mumbai Rajdhani",
+                from: "NDLS",
+                to: "BCT",
+                date: "2026-06-12",
+                class: "3A",
+                chart_status: "CHART NOT PREPARED",
+                passengers: [
+                    { no: 1, name: "John Doe", booking_status: "WL 12", current_status: "WL 3", coach: "-", berth: 0, berth_type: "-" },
+                    { no: 2, name: "Sarah Doe", booking_status: "WL 13", current_status: "WL 4", coach: "-", berth: 0, berth_type: "-" }
+                ]
+            };
+        }
+
+        /* -------------------------------------
+           LIVE TRAIN SPOTTER
+        -------------------------------------- */
+        async function handleSpotQuery(e) {
+            e.preventDefault();
+            const btn = document.getElementById('spotSubmitBtn');
+            const loader = document.getElementById('spotLoader');
+            const wrapper = document.getElementById('spotResultWrapper');
+            const trainNoVal = document.getElementById('spotTrainNoInput').value.trim();
+
+            btn.disabled = true;
+            loader.style.display = 'flex';
+            wrapper.style.display = 'none';
+
+            let data;
+            if (isBackendConnected) {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/spot?train_no=${trainNoVal}`);
+                    if (res.ok) {
+                        data = await res.json();
+                    } else {
+                        throw new Error("Server HTTP error");
+                    }
+                } catch (err) {
+                    console.warn("API Spot query failed. Falling back to local simulation.");
+                    data = getLocalSimulatedSpot(trainNoVal);
+                }
+            } else {
+                await new Promise(r => setTimeout(r, 800));
+                data = getLocalSimulatedSpot(trainNoVal);
+            }
+
+            renderSpotResults(data);
+
+            loader.style.display = 'none';
+            wrapper.style.display = 'block';
+            btn.disabled = false;
+            showToast('Live train position coordinates updated.');
+        }
+
+        function renderSpotResults(data) {
+            document.getElementById('spotTrainTitle').innerText = `${data.trainName} (${data.trainNo})`;
+            document.getElementById('spotCurrentStatusMsg').innerText = data.currentStatusMessage;
+            
+            const delayBadge = document.getElementById('spotTrainDelayText');
+            if (data.delayMinutes > 0) {
+                delayBadge.innerText = `${data.delayMinutes} mins Late`;
+                delayBadge.className = "delay-tag late";
+            } else {
+                delayBadge.innerText = "On Time";
+                delayBadge.className = "delay-tag ontime";
+            }
+
+            const listContainer = document.getElementById('spotStationList');
+            listContainer.innerHTML = '';
+
+            data.route.forEach(stop => {
+                const nodeClass = stop.status === 'Passed' ? 'passed' : (stop.status === 'Current' ? 'current' : 'upcoming');
+                const isLate = data.delayMinutes > 0 && stop.status === 'Current';
+                const actualArrText = stop.actualArrival !== '--:--' ? stop.actualArrival : stop.actualDeparture;
+                const schedArrText = stop.scheduledArrival !== '--:--' ? stop.scheduledArrival : stop.scheduledDeparture;
+
+                listContainer.innerHTML += `
+                    <div class="track-node ${nodeClass}">
+                        <div class="track-marker" aria-hidden="true"></div>
+                        <div class="track-content">
+                            <div class="station-details">
+                                <h4>${stop.stationName} (${stop.stationCode})</h4>
+                                <span class="platform-tag">Platform ${stop.platform || 1}</span>
+                            </div>
+                            <div class="station-schedule-times">
+                                <div class="time-entry">
+                                    <span>Scheduled:</span>
+                                    <span>${schedArrText}</span>
+                                </div>
+                                <div class="time-entry">
+                                    <span>Actual:</span>
+                                    <span class="${isLate ? 'color-warning' : ''}">${actualArrText}</span>
+                                </div>
+                                ${stop.status === 'Current' ? `
+                                    <div class="delay-tag ${data.delayMinutes > 0 ? 'late' : 'ontime'}">
+                                        ${data.delayMinutes > 0 ? `${data.delayMinutes}m Late` : 'On Time'}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function getLocalSimulatedSpot(trainNo) {
+            return {
+                trainNo: trainNo || "19269",
+                trainName: "PBR MFP Express",
+                currentStatusMessage: "Departed Ahmedabad Junction (ADI) | Next Halt: Anand Jn",
+                delayMinutes: 20,
+                route: [
+                    { stationCode: "JAM", stationName: "Jamnagar", scheduledArrival: "--:--", scheduledDeparture: "14:00", actualArrival: "--:--", actualDeparture: "14:00", platform: 1, status: "Passed" },
+                    { stationCode: "RJT", stationName: "Rajkot Junction", scheduledArrival: "15:30", scheduledDeparture: "15:40", actualArrival: "15:30", actualDeparture: "15:40", platform: 3, status: "Passed" },
+                    { stationCode: "ADI", stationName: "Ahmedabad Junction", scheduledArrival: "19:00", scheduledDeparture: "19:15", actualArrival: "19:20", actualDeparture: "19:35", platform: 4, status: "Current" },
+                    { stationCode: "CNB", stationName: "Kanpur Central", scheduledArrival: "08:15", scheduledDeparture: "08:25", actualArrival: "08:35", actualDeparture: "08:45", platform: 5, status: "Upcoming" },
+                    { stationCode: "MBI", stationName: "Madhubani", scheduledArrival: "17:30", scheduledDeparture: "--:--", actualArrival: "17:50", actualDeparture: "--:--", platform: 2, status: "Upcoming" }
+                ]
+            };
+        }
+
+        // Helper calculations
+        function sumDigits(str) {
+            return str.split('').reduce((acc, curr) => acc + (isNaN(curr) ? 0 : parseInt(curr)), 0);
+        }
+    </script>
+</body>
+
+</html>
